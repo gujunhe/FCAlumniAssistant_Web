@@ -182,7 +182,7 @@ export default defineComponent({
 
 
 
-      axios.post("/user/save", question.value).then((response) => {
+      axios.post("/question/save", question.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp
         if (data.success) {

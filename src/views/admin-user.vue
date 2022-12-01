@@ -6,12 +6,32 @@
   <p>
     <a-form layout="inline" :model="param">
       <a-form-item>
-        <a-input v-model:value="param.loginName" placeholder="登陆名">
+        <a-input v-model:value="param.name" placeholder="姓名">
+        </a-input>
+      </a-form-item>
+      <a-form-item>
+        <a-input v-model:value="param.phonenumber" placeholder="电话号">
+        </a-input>
+      </a-form-item>
+      <a-form-item>
+        <a-input v-model:value="param.graduationtime" placeholder="毕业年份">
+        </a-input>
+      </a-form-item>
+      <a-form-item>
+        <a-input v-model:value="param.major" placeholder="专业">
+        </a-input>
+      </a-form-item>
+      <a-form-item>
+        <a-input v-model:value="param.banji" placeholder="班级">
+        </a-input>
+      </a-form-item>
+      <a-form-item>
+        <a-input v-model:value="param.department" placeholder="部门">
         </a-input>
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
-          查询
+          多条件查询
         </a-button>
       </a-form-item>
     </a-form>
@@ -33,7 +53,7 @@
             title="删除后不可恢复，确认删除?"
             ok-text="是"
             cancel-text="否"
-            @confirm="handleDelete(record.id)"
+            @confirm="handleDelete(record)"
         >
           <a-button type="danger">
             删除
@@ -61,36 +81,24 @@
   <a-form-item label="室友">
     <a-input v-model:value="user.roommatename" />
   </a-form-item>
-  <a-form-item label="电话号" v-show="user.phonenumber">
+  <a-form-item label="电话号" >
     <a-input v-model:value="user.phonenumber" />
   </a-form-item>
-  <a-form-item label="毕业年份" v-show="user.graduationtime">
+  <a-form-item label="毕业年份" >
     <a-input v-model:value="user.graduationtime" />
   </a-form-item>
-  <a-form-item label="专业" v-show="user.major">
+  <a-form-item label="专业" >
     <a-input v-model:value="user.major" />
   </a-form-item>
-  <a-form-item label="班级" v-show="user.banji">
+  <a-form-item label="班级" >
     <a-input v-model:value="user.banji" />
   </a-form-item>
-  <a-form-item label="部门" v-show="user.department">
+  <a-form-item label="部门" >
     <a-input v-model:value="user.department"/>
   </a-form-item>
 </a-form>
 </a-modal>
 
-<a-modal
-    title="重置密码"
-    v-model:visible="resetModalVisible"
-    :confirm-loading="resetModalLoading"
-    @ok="handleResetModalOk"
->
-<a-form :model="user" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-  <a-form-item label="新密码">
-    <a-input v-model:value="user.password" type="password"/>
-  </a-form-item>
-</a-form>
-</a-modal>
 </template>
 
 <script lang="ts">
@@ -106,6 +114,7 @@ export default defineComponent({
   name: 'User',
   setup() {
     const param = ref();
+    // param.value = {name:"",roommatename:"",phonenumber:"",graduationtime:"",major:"",banji:"",department:""};
     param.value = {};
     const users = ref();
     const pagination = ref({
@@ -166,17 +175,19 @@ export default defineComponent({
         params: {
           pageNum: params.page,
           pageSize: params.size,
-          name:"",
-          roommateName:"",
-          phonenumber:"",
-          graduationTime:"",
-          major:"",
-          banji:"",
-          department:""
+          name:param.value.name==null?"":param.value.name,
+          roommateName:param.value.roommatename==null?"":param.value.roommatename,
+          phonenumber:param.value.phonenumber==null?"":param.value.phonenumber,
+          graduationTime:param.value.graduationtime==null?"":param.value.graduationtime,
+          major:param.value.major==null?"":param.value.major,
+          banji:param.value.banji==null?"":param.value.banji,
+          department:param.value.department==null?"":param.value.department
         }
       }).then((response) => {
+
         loading.value = false;
         const data = response.data;
+        console.log(data)
         if (data.success) {
           users.value = data.content.data;
 
@@ -207,9 +218,9 @@ export default defineComponent({
     const handleModalOk = () => {
       modalLoading.value = true;
 
-      user.value.password = hexMd5(user.value.password + KEY);
 
-      axios.post("/user/save", user.value).then((response) => {
+
+      axios.post("/certified/save", user.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp
         if (data.success) {
@@ -235,55 +246,22 @@ export default defineComponent({
     };
 
 
-    const handleDelete = (id: number) => {
-      axios.delete("/user/delete/" + id).then((response) => {
-        const data = response.data; // data = commonResp
-        if (data.success) {
-          // 重新加载列表
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize,
-          });
-        } else {
-          message.error(data.message);
-        }
-      });
-    };
+    const handleDelete = (record: any) => {
 
-    // -------- 重置密码 ---------
-    const resetModalVisible = ref(false);
-    const resetModalLoading = ref(false);
-    const handleResetModalOk = () => {
-      resetModalLoading.value = true;
-
-      user.value.password = hexMd5(user.value.password + KEY);
-
-      axios.post("/user/reset-password", user.value).then((response) => {
-        resetModalLoading.value = false;
-        const data = response.data; // data = commonResp
-        if (data.success) {
-          resetModalVisible.value = false;
-
-          // 重新加载列表
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize,
-          });
-        } else {
-          message.error(data.message);
-        }
-      });
-    };
-
-    /**
-     * 重置密码
-     */
-    const resetPassword = (record: any) => {
-      resetModalVisible.value = true;
       user.value = Tool.copy(record);
-      user.value.password = null;
+      axios.post("/certified/delete" + user.value).then((response) => {
+        const data = response.data; // data = commonResp
+        if (data.success) {
+          // 重新加载列表
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize,
+          });
+        } else {
+          message.error(data.message);
+        }
+      });
     };
-
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -310,10 +288,7 @@ export default defineComponent({
 
       handleDelete,
 
-      resetModalVisible,
-      resetModalLoading,
-      handleResetModalOk,
-      resetPassword
+
     }
   }
 });

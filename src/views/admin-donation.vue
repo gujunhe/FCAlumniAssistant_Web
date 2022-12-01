@@ -29,7 +29,7 @@
                 title="删除后不可恢复，确认删除?"
                 ok-text="是"
                 cancel-text="否"
-                @confirm="handleDelete(record.id)"
+                @confirm="handleDelete(record)"
             >
               <a-button type="danger">
                 删除
@@ -181,9 +181,10 @@ export default defineComponent({
 
 
 
-      axios.post("/user/save", donation.value).then((response) => {
+      axios.post("/question/save", donation.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp
+        console.log(data)
         if (data.success) {
           modalVisible.value = false;
 
@@ -214,8 +215,9 @@ export default defineComponent({
       donation.value = {};
     };
 
-    const handleDelete = (id: number) => {
-      axios.delete("/user/delete/" + id).then((response) => {
+    const handleDelete = (record: any) => {
+      donation.value = Tool.copy(record);
+      axios.post("/donation/delete" + donation.value).then((response) => {
         const data = response.data; // data = commonResp
         if (data.success) {
           // 重新加载列表

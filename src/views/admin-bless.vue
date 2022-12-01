@@ -42,7 +42,7 @@
   </a-layout>
 
   <a-modal
-      title="问题表单"
+      title="祝福语表单"
       v-model:visible="modalVisible"
       :confirm-loading="modalLoading"
       @ok="handleModalOk"
@@ -51,7 +51,7 @@
       <a-form-item label="id">
         <a-input v-model:value="greeting.keyid" />
       </a-form-item>
-      <a-form-item label="问题">
+      <a-form-item label="祝福语">
         <a-input v-model:value="greeting.greeting" />
       </a-form-item>
 
@@ -149,7 +149,7 @@ export default defineComponent({
 
 
 
-      axios.post("/user/save", greeting.value).then((response) => {
+      axios.post("/voice/save", greeting.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp
         if (data.success) {

@@ -29,7 +29,7 @@
                 title="删除后不可恢复，确认删除?"
                 ok-text="是"
                 cancel-text="否"
-                @confirm="handleDelete(record.id)"
+                @confirm="handleDelete(record)"
             >
               <a-button type="danger">
                 删除
@@ -66,18 +66,7 @@
     </a-form>
   </a-modal>
 
-  <a-modal
-      title="重置密码"
-      v-model:visible="resetModalVisible"
-      :confirm-loading="resetModalLoading"
-      @ok="handleResetModalOk"
-  >
-    <a-form :model="user" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-      <a-form-item label="新密码">
-        <a-input v-model:value="user.password" type="password"/>
-      </a-form-item>
-    </a-form>
-  </a-modal>
+
 </template>
 
 <script lang="ts">
@@ -178,7 +167,7 @@ export default defineComponent({
 
 
 
-      axios.post("/user/save", map.value).then((response) => {
+      axios.post("/theMap/save", map.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp
         if (data.success) {
@@ -200,7 +189,7 @@ export default defineComponent({
      */
     const edit = (record: any) => {
       modalVisible.value = true;
-      map.value = Tool.copy(record);
+
     };
 
     /**
@@ -211,9 +200,11 @@ export default defineComponent({
       map.value = {};
     };
 
-    const handleDelete = (id: number) => {
-      axios.delete("/user/delete/" + id).then((response) => {
+    const handleDelete = (record: any) => {
+      map.value = Tool.copy(record);
+      axios.post("/theMap/delete" + map.value).then((response) => {
         const data = response.data; // data = commonResp
+        console.log(data)
         if (data.success) {
           // 重新加载列表
           handleQuery({
