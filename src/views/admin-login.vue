@@ -1,6 +1,6 @@
 <template>
   <div id="building" v-show="!user.id">
-    <div  class="title">     <img style="height: 120px;width: 90px" src="../assets/icon.png">福州大学计算机学院后台管理系统</div>
+    <div  class="title">     <img style="height: 120px;width: 90px" src="../assets/icon.png">福州大学计算机学院院庆后台管理系统</div>
 
 
       <a-form class="main" :model="loginUser" >
@@ -22,8 +22,6 @@
 
       </a-form>
 
-
-
   </div>
 
 <!--  <a-button type="primary">Primary Button</a-button>-->
@@ -36,6 +34,7 @@ import { UserOutlined, InfoCircleOutlined,HomeOutlined,LockOutlined } from '@ant
 import axios from 'axios';
 import { message } from 'ant-design-vue';
 import store from "@/store";
+import router from "@/router";
 export default defineComponent({
   components: {
     UserOutlined,
@@ -67,6 +66,8 @@ export default defineComponent({
         if (data.success) {
           modalVisible.value = false;
           store.commit("setUser", data.content);
+
+          router.replace("/");
         } else {
           message.error(data.message);
         }
@@ -82,6 +83,8 @@ export default defineComponent({
           message.success("登录成功！");
 
           store.commit("setUser", {id:loginUser.value.admin});
+
+          router.replace("/");
         } else {
           message.error(data.message);
         }
@@ -130,7 +133,8 @@ export default defineComponent({
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  right: 95px;
+
   bottom: 0;
 }
 .title{
@@ -142,9 +146,14 @@ export default defineComponent({
   margin: auto;
   position: absolute;
   top: 0;
-  left: 75px;
+  left: -25px;
   right: 0;
-  bottom: 720px;
+  bottom: 275px;
+
+  color: black;
+  font-weight: 700;
+  font-size: 24px;
+  font-family: Microsoft Yahei;
 }
 
 /* 背景 */
@@ -170,13 +179,7 @@ export default defineComponent({
   font-size: 16px;
 }
 /* 用户登陆标题 */
-.title{
-  margin-bottom: 50px;
-  color: black;
-  font-weight: 700;
-  font-size: 24px;
-  font-family: Microsoft Yahei;
-}
+
 /* 输入框 */
 .inputBox{
   height: 45px;

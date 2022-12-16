@@ -8,11 +8,9 @@
 
       :style="{ lineHeight: '64px' }"
     >
-      <a-menu-item key="/">
-        <router-link to="/">首页</router-link>
-      </a-menu-item>
-      <a-menu-item key="/admin/user" >
-        <router-link to="/admin/user">校友管理</router-link>
+
+      <a-menu-item key="/" >
+        <router-link to="/">校友管理</router-link>
       </a-menu-item>
       <a-menu-item key="/admin/map" >
         <router-link to="/admin/map">校园地图管理</router-link>
@@ -23,9 +21,9 @@
       <a-menu-item key="/admin/bless">
         <router-link to="/admin/bless">祝福语管理</router-link>
       </a-menu-item>
-      <a-menu-item key="/admin/alumnus">
-        <router-link to="/admin/alumnus">校友风采管理</router-link>
-      </a-menu-item>
+<!--      <a-menu-item key="/admin/alumnus">-->
+<!--        <router-link to="/admin/alumnus">校友风采管理</router-link>-->
+<!--      </a-menu-item>-->
 
       <a-menu-item key="/admin/donation">
         <router-link to="/admin/donation">捐款管理</router-link>

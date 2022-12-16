@@ -13,20 +13,13 @@ import {Tool} from "@/util/tool";
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
-    meta: {
-      loginRequire: true
-    }
-  },
-  {
-    path: '/admin/user',
     name: 'User',
     component: User,
     meta: {
       loginRequire: true
     }
-  },  {
+  },
+  {
     path: '/admin/map',
     name: 'Map',
     component: Map,
